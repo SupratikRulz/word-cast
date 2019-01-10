@@ -25,4 +25,18 @@ class WordCast {
     this.rootElement = rootElement;
     return this;
   }
+
+
+  /**
+   * Function which accepts array of words(strings)
+   * and stores them in list.
+   * @param {array} [wordList=[]] 
+   * @returns instance of this class
+   * 
+   * @memberOf WordCast
+   */
+  setWordList(wordList = []) {
+    this.wordList = wordList;
+    return this;
+  }
 }
