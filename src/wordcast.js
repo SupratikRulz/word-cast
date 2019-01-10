@@ -13,7 +13,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  constructor(rootElement = null, wordList = ['Thanks', 'For', 'Using', 'WordCast']) {
+  constructor (rootElement = null, wordList = ['Thanks', 'For', 'Using', 'WordCast']) {
     this.rootElement = rootElement;
     this.wordList = wordList;
     this.colorPalette = ['#000000'];
@@ -21,6 +21,8 @@ class WordCast {
     this.maxFontSize = 16;
     this.fontFamily = 'sans-serif';
     this.wordsInCloud = [];
+    this.xPadding = 3;
+    this.yPadding = 3;
   }
 
   /**
@@ -31,7 +33,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  setRootElement(rootElement = null) {
+  setRootElement (rootElement = null) {
     this.rootElement = rootElement;
     return this;
   }
@@ -44,7 +46,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  setWordList(wordList = []) {
+  setWordList (wordList = []) {
     this.wordList = wordList;
     return this;
   }
@@ -57,7 +59,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  setMinimumFontSize(minFontSize = 8) {
+  setMinimumFontSize (minFontSize = 8) {
     this.minFontSize = minFontSize;
     return this;
   }
@@ -70,7 +72,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  setMaximumFontSize(maxFontSize = 16) {
+  setMaximumFontSize (maxFontSize = 16) {
     this.maxFontSize = maxFontSize;
     return this;
   }
@@ -83,7 +85,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  setFontFamily(fontFamily = 'sans-serif') {
+  setFontFamily (fontFamily = 'sans-serif') {
     this.fontFamily = fontFamily;
     return this;
   }
@@ -96,8 +98,49 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  setColorPalette(colorPalette = ['#000000']) {
+  setColorPalette (colorPalette = ['#000000']) {
     this.colorPalette = colorPalette;
+    return this;
+  }
+
+  /**
+   * Function to set the x padding for the word
+   * 
+   * @param {number} [xPadding=3] 
+   * @returns instance of this class
+   * 
+   * @memberOf WordCast
+   */
+  setXPadding (xPadding = 3) {
+    this.xPadding = xPadding;
+    return this;
+  }
+
+  /**
+   * Function to set y padding for the word
+   * 
+   * @param {number} [yPadding=3] 
+   * @returns instance of this class
+   * 
+   * @memberOf WordCast
+   */
+  setYPadding (yPadding = 3) {
+    this.yPadding = yPadding;
+    return this;
+  }
+
+  /**
+   * Function to set the x padding and y padding of the word
+   * 
+   * @param {number} [xPadding=3] 
+   * @param {number} [yPadding=3] 
+   * @returns instance of this class
+   * 
+   * @memberOf WordCast
+   */
+  setPadding (xPadding = 3, yPadding = 3) {
+    this.xPadding = xPadding;
+    this.yPadding = yPadding;
     return this;
   }
 
@@ -107,7 +150,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  build() {
+  build () {
     // Create the word list array sorted according to font-size
     let wordList = this.wordList.map(_word => ({
       word: _word,
@@ -137,7 +180,7 @@ class WordCast {
    *
    * @memberOf WordCast
    */
-  _addToWordCast(wordElement, x, y) {
+  _addToWordCast (wordElement, x, y) {
     // Add the word inside the root element
     this.rootElement.appendChild(wordElement);
 
@@ -158,7 +201,7 @@ class WordCast {
    * 
    * @memberOf WordCast
    */
-  _createWordElement(word, fontSize) {
+  _createWordElement (word, fontSize) {
     // Create the div container for text
     let wordContainerDiv = create('div');
 
@@ -173,4 +216,42 @@ class WordCast {
     // Return the container
     return wordContainerDiv;
   }
+
+  /**
+   * Function to check if the word is safe to place in the position (x,y)
+   * such that it does not intersect with other words
+   * @param {element} wordElement 
+   * @param {number} x 
+   * @param {number} y 
+   * 
+   * @memberOf WordCast
+   */
+  _isWordSafeToPlace (wordElement, x, y) {
+    // Place the word in the cloud initially for getting the position of the word
+    this.rootElement.appendChild(wordElement);
+
+    // Set the top and left of the word
+    wordElement.style.left = x - wordElement.offsetWidth/2 + "px";
+    wordElement.style.top = y - wordElement.offsetHeight/2 + "px";
+
+    // Get the position of the word
+    let currentWordPosition = wordElement.getBoundingClientRect();
+
+    // Remove the word from the cloud
+    this.rootElement.removeChild(wordElement);
+
+    // Iterate through the positions of all the elements placed in word cloud
+    // and determine if it's not overlapping with others.
+    for (let comparisonWordPosition of this.wordsInCloud) {
+      if (
+        (currentWordPosition.right + this.xPadding > comparisonWordPosition.left - this.xPadding) ||
+        (currentWordPosition.left - this.xPadding < comparisonWordPosition.right + this.xPadding) ||
+        (currentWordPosition.top - this.yPadding < comparisonWordPosition.bottom + this.yPadding) ||
+        (currentWordPosition.bottom + this.yPadding > comparisonWordPosition.top - this.yPadding)
+      ) {
+          return false;
+      }
+    }
+    return true;
+  } 
 }
