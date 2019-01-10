@@ -1,0 +1,35 @@
+{
+  "name": "word-cast",
+  "version": "1.0.0",
+  "description": "A javascript library for making word cloud",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SupratikRulz/word-cast.git"
+  },
+  "keywords": [
+    "word",
+    "cloud",
+    "word",
+    "cloud",
+    "word-cloud",
+    "word",
+    "cast",
+    "word-cast",
+    "cast",
+    "library",
+    "javascript"
+  ],
+  "author": "SupratikRulz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SupratikRulz/word-cast/issues"
+  },
+  "homepage": "https://github.com/SupratikRulz/word-cast#readme",
+  "devDependencies": {
+    "webpack": "^4.28.4"
+  }
+}
