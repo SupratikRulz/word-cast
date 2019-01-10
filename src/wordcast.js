@@ -23,6 +23,7 @@ class WordCast {
     this.wordsInCloud = [];
     this.xPadding = 3;
     this.yPadding = 3;
+    this.cloudSpread = 365;
   }
 
   /**
@@ -141,6 +142,19 @@ class WordCast {
   setPadding (xPadding = 3, yPadding = 3) {
     this.xPadding = xPadding;
     this.yPadding = yPadding;
+    return this;
+  }
+
+  /**
+   * Function to set the cloud spread
+   * 
+   * @param {number} [cloudSpread=365] 
+   * @returns the instance of this class
+   * 
+   * @memberOf WordCast
+   */
+  setCloudSpread (cloudSpread = 365) {
+    this.cloudSpread = cloudSpread;
     return this;
   }
 
