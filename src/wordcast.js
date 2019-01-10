@@ -2,6 +2,9 @@ import { randomBetween } from './utils';
 
 let win = window,
   doc = win.document || document,
+  math = Math,
+  cos = math.cos,
+  sin = math.sin,
   create = doc.createElement,
   createText = doc.createTextNode;
 class WordCast {
@@ -24,6 +27,8 @@ class WordCast {
     this.xPadding = 3;
     this.yPadding = 3;
     this.cloudSpread = 365;
+    this._x = 0;
+    this._y = 0;
   }
 
   /**
@@ -267,5 +272,21 @@ class WordCast {
       }
     }
     return true;
-  } 
+  }
+
+  /**
+   * Function to calculate the potential position for placing the word
+   * 
+   * @param {number} angle 
+   * @param {function} callback 
+   * @returns the value returned by the callback method
+   * 
+   * @memberOf WordCast
+   */
+  _computePotentialPosition (angle, callback) {
+    this._x = (1 + angle) * cos(angle);
+    this._y = (1 + angle) * sin(angle);
+
+    return callback ? callback() : null;
+  }
 }
