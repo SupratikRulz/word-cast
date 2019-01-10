@@ -29,6 +29,10 @@ class WordCast {
     this.cloudSpread = 365;
     this._x = 0;
     this._y = 0;
+    this._startingPoint = {
+      x: 0,
+      y: 0
+    }
   }
 
   /**
@@ -182,12 +186,23 @@ class WordCast {
     this.rootElement.style.fontFamily = this.fontFamily;
 
     // Set the starting point to the center of the rootElement
-    let startingPoint = {
+    this._setStartingPoint();
+
+    // Place the words in the word cloud
+    this._placeWords(wordList);
+  }
+
+
+  /**
+   * Function to set the starting point for placing the words.
+   * 
+   * @memberOf WordCast
+   */
+  _setStartingPoint () {
+    this._startingPoint = {
       x: this.rootElement.offsetWidth / 2,
       y: this.rootElement.offsetHeight / 2
     }
-
-
   }
 
   /**
@@ -289,4 +304,38 @@ class WordCast {
 
     return callback ? callback() : null;
   }
+
+  /**
+   * Function to populate the words in word cloud without overlapping with each other
+   * 
+   * @param {array} wordList 
+   * 
+   * @memberOf WordCast
+   */
+  _placeWords (wordList) {
+    // Loop through all the words in wordList
+    for (let word of wordList) {
+      // Create the div element for each word
+      let wordElement = this._createWordElement(word.word, word.fontSize);
+
+      // Find a suitable position in the cloudSpread and place it there
+      for (let angle = 0; angle < this.cloudSpread; ++angle) {
+        // If the word is placed in word-cloud,
+        // then break the loop and repeat the same for next word(if available)
+        if (this._computePotentialPosition(angle, () => {
+          let x = this._startingPoint.x + this._x,
+            y = this._startingPoint.y + this._y;
+          // If the word is safe to place, then add to the word-cloud
+          if (this._isWordSafeToPlace(wordElement, x, y)) {
+            this._addToWordCast(wordElement, x, y);
+            return true;
+          }
+        })) {
+          break;
+        }
+      }
+    }
+  }
 }
+
+export default WordCast;
