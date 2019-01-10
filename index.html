@@ -7,8 +7,22 @@
   <title>Word Cast</title>
 </head>
 <body>
-  <!-- <script src=""></script> -->
+    <script src="./dist/main.js"></script>
   <p>This is demo for word-cast library</p>
-  <div id="word-cast"></div>
+  <div id="word-cast" style="height:400px; width:400px;"></div>
+
+  <script>
+  var wc = new WordCast()
+              .setRootElement(document.getElementById('word-cast'))
+              .setCloudSpread(365*5)
+              .setColorPalette(['#ff0000', '#00ff00', '#0000ff'])
+              .setPadding(1,1)
+              .setMinimumFontSize(10)
+              .setMaximumFontSize(15)
+              .setWordList(['hey', 'uber', 'lyft', 'supratik basu', 'this is a sentence','ohh no!'])
+              .build();
+  
+  </script>
+  
 </body>
 </html>

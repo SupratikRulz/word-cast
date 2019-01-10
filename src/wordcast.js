@@ -1,12 +1,8 @@
 import { randomBetween } from './utils';
 
-let win = window,
-  doc = win.document || document,
-  math = Math,
+let math = Math,
   cos = math.cos,
-  sin = math.sin,
-  create = doc.createElement,
-  createText = doc.createTextNode;
+  sin = math.sin;
 class WordCast {
 
   /**
@@ -32,7 +28,8 @@ class WordCast {
     this._startingPoint = {
       x: 0,
       y: 0
-    }
+    };
+    this.elementCreated = 0;
   }
 
   /**
@@ -237,15 +234,15 @@ class WordCast {
    */
   _createWordElement (word, fontSize) {
     // Create the div container for text
-    let wordContainerDiv = create('div');
+    let wordContainerDiv = document.createElement('div');
 
     // Set the css styles of the word
     wordContainerDiv.style.position = "absolute";
     wordContainerDiv.style.fontSize = fontSize + "px";
-    wordContainerDiv.style.color = this.colorPalette[randomBetween(0, this.colorPalette.length - 1)];
+    wordContainerDiv.style.color = this.colorPalette[this.elementCreated++%this.colorPalette.length];
 
     // Append the text inside div
-    wordContainerDiv.appendChild(createText(word));
+    wordContainerDiv.appendChild(document.createTextNode(word));
 
     // Return the container
     return wordContainerDiv;
@@ -277,11 +274,12 @@ class WordCast {
     // Iterate through the positions of all the elements placed in word cloud
     // and determine if it's not overlapping with others.
     for (let comparisonWordPosition of this.wordsInCloud) {
-      if (
-        (currentWordPosition.right + this.xPadding > comparisonWordPosition.left - this.xPadding) ||
-        (currentWordPosition.left - this.xPadding < comparisonWordPosition.right + this.xPadding) ||
-        (currentWordPosition.top - this.yPadding < comparisonWordPosition.bottom + this.yPadding) ||
-        (currentWordPosition.bottom + this.yPadding > comparisonWordPosition.top - this.yPadding)
+      if (!(
+            (currentWordPosition.right + this.xPadding < comparisonWordPosition.left - this.xPadding) ||
+            (currentWordPosition.left - this.xPadding > comparisonWordPosition.right + this.xPadding) ||
+            (currentWordPosition.top - this.yPadding > comparisonWordPosition.bottom + this.yPadding) ||
+            (currentWordPosition.bottom + this.yPadding < comparisonWordPosition.top - this.yPadding)
+          )
       ) {
           return false;
       }
